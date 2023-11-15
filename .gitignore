@@ -1,0 +1,11 @@
+**/.ipynb_checkpoints
+**/archive
+.DS_Store
+**/__pycache__
+**/data/
+**/logs
+scratch.ipynb
+SECRETS
+.cache/
+/2_rarecomb_R/
+.config/
