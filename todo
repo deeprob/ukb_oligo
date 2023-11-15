@@ -1,0 +1,5 @@
+1. Deepro: change icd case controls creation script
+2. Maria: Fork repository and store it to data7, copy genotype and icd-code dir. Refer to /data6/deepro/ukb_bmi for folder structure.
+3. Raj: Get cluster access; Fork repository and store it to data7, copy genotype and icd-code dir. Refer to /data6/deepro/ukb_bmi for folder structure.
+4. Maria: Teach Raj how to run slurm scripts in cluster.
+ 
