@@ -162,21 +162,27 @@ def create_case_controls_file(icd_codes_of_interest, cohort_samples, pheno_tree,
         df.to_csv(save_file, index=False)
     return
 
+def read_list(filename):
+    with open(filename, "r") as f:
+        my_list = [i.strip() for i in f.read_lines()]
+    return set(my_list)
+
+
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description='Rarecomb pipeline.')
     parser.add_argument("icd_raw_dir", type=str, help="Filepath of the icd codes with sample info dir")
-    parser.add_argument("cohort_samples_file", type=str, help="Filepath of the cohort samples with bmi cases and control")
+    parser.add_argument("cohort_samples_file", type=str, help="Filepath of the cohort samples to create cases and control")
     parser.add_argument("icd_codes_file", type=str, help="Filepath of the icd codes with parent info")
+    parser.add_argument("icd_codes_of_interest_file", type=str, help="Filepath of the icd codes from which cases and controls will be created")
     parser.add_argument("save_dir", type=str, help="Filepath where case control files will be stored")
 
     cli_args = parser.parse_args()
 
     icd_samples_df = create_icd_samples_file(cli_args.icd_raw_dir)
-    cohort_samples_df = pd.read_csv(cli_args.cohort_samples_file)
     icd_codes_df = pd.read_csv(cli_args.icd_codes_file, usecols=["coding", "meaning", "node_id", "parent_id"], sep="\t")
 
-    icd_codes_of_interest = ['Block I10-I15', 'Block E10-E14', 'Block M15-M19', 'Block E70-E90', 'Block K80-K87', 'Block I20-I25']
-    cohort_samples = set(cohort_samples_df.loc[cohort_samples_df.Output_BMI==1, "Sample_Name"].astype(str).values)
+    icd_codes_of_interest = read_list(cli_args.icd_codes_of_interest_file)
+    cohort_samples = read_list(cli_args.cohort_samples_file)
 
     pheno_tree, root_pheno, c2nodeid_dict = create_tree(icd_codes_df, icd_samples_df)
     create_case_controls_file(icd_codes_of_interest, cohort_samples, pheno_tree, root_pheno, c2nodeid_dict, cli_args.save_dir)
